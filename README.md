@@ -4,13 +4,13 @@ AI-powered resume (CV) evaluator that scores uploaded resumes against user-defin
 
 ---
 
-## 🚀 Features
+ Features
 - Upload resumes (CVs) into the system
 - Define evaluation criteria as input
 - Optionally assign different weights to criteria
 - Automatically calculate a percentage-based match score for each CV
 
-## 🔮 Planned Features / Roadmap
+ Planned Features / Roadmap
 - Export evaluation results as **PDF** reports
 - Sort CVs by match score (highest → lowest)
 - Integrations with external recruitment platforms
@@ -18,7 +18,7 @@ AI-powered resume (CV) evaluator that scores uploaded resumes against user-defin
 
 ---
 
-## 🛠 Tech Stack
+ Tech Stack
 - **Language:** Python
 - **Framework:** Flask
 - **IDE:** PyCharm
@@ -27,7 +27,7 @@ AI-powered resume (CV) evaluator that scores uploaded resumes against user-defin
 
 ---
 
-## ⚙️ Installation & Setup
+ Installation & Setup
 
 > Requires Python 3.9+ (adjust if your environment differs)
 
@@ -65,14 +65,14 @@ http://127.0.0.1:5000
 
 ---
 
-## 🔧 Configuration
+ Configuration
 No additional configuration is required in the current version. The application runs locally after installing dependencies.
 
 > If you later add a database or external APIs, introduce environment variables (e.g., via a `.env` file) and document them here.
 
 ---
 
-## 🔍 Usage
+ Usage
 1. **Upload CV** (PDF/DOCX)
 2. **Enter criteria** and optionally **assign weights**
 3. Click **“Evaluate”**
@@ -80,7 +80,7 @@ No additional configuration is required in the current version. The application 
 
 ---
 
-## 🤖 Model Details
+ Model Details
 - **Approach:** Prompt-engineering with a **system prompt** that specifies how to evaluate CVs and format answers (no model fine-tuning).
 - **Model:** LLaMA 3.1 integrated locally on the developer’s machine.
 - **Output format:** `Full Name – Match Percentage` (e.g., `Jane Doe – 82%`).
@@ -89,31 +89,16 @@ No additional configuration is required in the current version. The application 
 
 > If you adopt a specific runtime (e.g., llama.cpp, vLLM, transformers), document it here with setup steps.
 
----
-
-## 📸 Screenshots (Optional)
-_Add screenshots or a short GIF demonstrating the upload → evaluate → results flow._
-
----
-
-## 🤝 Contributing
+Contributing
 Contributions are welcome! Please open an issue to discuss significant changes and submit a pull request with a clear description.
 
----
 
-## 📅 License
+License
 Specify your license (e.g., MIT). Add a `LICENSE` file at the project root.
 
----
 
-## 📫 Contact
-- Author: Your Name
-- Email: your.email@example.com
-- GitHub: [@yourusername](https://github.com/yourusername)
 
----
-
-## ✨ Acknowledgements (Optional)
+Acknowledgements 
 - LLaMA 3.1
 - Flask community & Python ecosystem
 
