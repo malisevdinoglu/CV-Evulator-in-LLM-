@@ -1,0 +1,831 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI CV EVULATOR</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #4361ee;
+            --secondary: #3a0ca3;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --success: #4cc9f0;
+            --border: #dee2e6;
+            --disabled: #adb5bd;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f5f7fb;
+            color: var(--dark);
+            line-height: 1.6;
+            padding: 0;
+            margin: 0;
+            display: flex;
+        }
+
+        /* Sidebar styles */
+        .sidebar {
+            width: 250px;
+            background-color: white;
+            height: 100vh;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.05);
+            padding: 20px 0;
+            position: sticky;
+            top: 0;
+        }
+
+        .sidebar h2 {
+            padding: 0 20px;
+            margin-bottom: 20px;
+            font-size: 1.2rem;
+            color: var(--primary);
+        }
+
+        .menu {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .menu-item {
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            position: relative;
+        }
+
+        .menu-item:hover {
+            background-color: rgba(67, 97, 238, 0.1);
+        }
+
+        .menu-item.active {
+            background-color: rgba(67, 97, 238, 0.1);
+            border-left: 3px solid var(--primary);
+            font-weight: 500;
+            color: var(--primary);
+        }
+
+        .main-content {
+            flex: 1;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            overflow: hidden;
+        }
+
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            overflow: hidden;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .subtitle {
+            opacity: 0.9;
+            font-weight: 300;
+        }
+
+        .section {
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .section-title {
+            color: var(--primary);
+            margin-bottom: 1rem;
+            font-size: 1.25rem;
+        }
+
+        .upload-area {
+            border: 2px dashed var(--border);
+            border-radius: 8px;
+            padding: 2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-bottom: 1rem;
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        .criteria-container {
+            margin: 16px 0;
+            border-left: 3px solid #4361ee;
+            padding-left: 12px;
+        }
+
+        .criterion-item {
+            display: flex;
+            align-items: center;
+            margin: 8px 0;
+            padding: 8px 12px;
+            background-color: #f8f9fa;
+            border-radius: 6px;
+            position: relative;
+        }
+
+        .criterion-item::before {
+            content: "-";
+            margin-right: 12px;
+            color: #4361ee;
+            font-weight: bold;
+        }
+
+        .criterion-input {
+            flex: 1;
+            border: none;
+            background: transparent;
+            padding: 6px 0;
+            font-size: 14px;
+        }
+
+        .criterion-input:focus {
+            outline: none;
+        }
+
+        .add-criterion-btn {
+            display: flex;
+            align-items: center;
+            background: none;
+            border: none;
+            color: #4361ee;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            padding: 8px 12px;
+            margin-top: 8px;
+        }
+
+        .add-criterion-btn:hover {
+            background-color: rgba(67, 97, 238, 0.1);
+            border-radius: 6px;
+        }
+
+        .add-criterion-btn svg {
+            margin-right: 8px;
+        }
+
+        .remove-criterion {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #dc3545;
+            margin-left: 8px;
+            padding: 4px;
+            border-radius: 4px;
+        }
+
+        .remove-criterion:hover {
+            background-color: rgba(220, 53, 69, 0.1);
+        }
+
+        .result-item {
+            background: var(--light);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .ai-analysis {
+            white-space: pre-wrap;
+            background: #f8f9fa;
+            padding: 1rem;
+            border-radius: 8px;
+            font-family: monospace;
+        }
+
+        .btn {
+            font-size: 1rem;
+            padding: 1rem;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        .btn.disabled {
+            background: var(--disabled);
+            color: white;
+            cursor: not-allowed;
+        }
+
+        .btn.active {
+            background: var(--primary);
+            color: white;
+        }
+        .criterion-weight {
+            width: 50px;
+            margin-left: 10px;
+            padding: 5px;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            text-align: center;
+        }
+        
+        .weight-toggle {
+            margin-left: 10px;
+            color: var(--primary);
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+        
+        .weight-container {
+            display: none;
+            margin-top: 10px;
+        }
+        
+        .weight-label {
+            font-size: 0.8rem;
+            color: var(--dark);
+            margin-right: 5px;
+        }
+        .weight-controls {
+            display: flex;
+            align-items: center;
+            margin-top: 10px;
+        }
+        
+        .criterion-weight {
+            width: 60px;
+            margin-left: 10px;
+            padding: 5px;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            text-align: center;
+        }
+        
+        .weight-summary {
+            font-size: 0.8rem;
+            margin-left: 15px;
+            color: var(--primary);
+        }
+        
+        .weight-error {
+            color: #dc3545;
+            font-size: 0.8rem;
+            margin-top: 5px;
+        }
+        
+        .weight-label {
+            font-size: 0.8rem;
+            color: var(--dark);
+            margin-right: 5px;
+        }
+        
+        .criteria-row {
+            display: flex;
+            align-items: center;
+            width: 100%;
+            margin-bottom: 5px;
+        }
+        
+        .criteria-input-container {
+            flex: 1;
+            display: flex;
+            align-items: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <h2>CV Evaluation</h2>
+        <ul class="menu">
+            <li class="menu-item">
+                  <span>🏠 </span>
+                <span>Home</span>
+            </li>
+            <li class="menu-item active">
+                 <span>📤 </span>
+                <span>Upload CV</span>
+            </li>
+            <li class="menu-item">
+                 <span>✔️ </span>
+                <span>Evaluation Criteria</span>
+            </li>
+            <li class="menu-item">
+                 <span>📊 </span>
+                <span>My Results</span>
+            </li>
+            <li class="menu-item">
+                <span>⏱️ </span>
+                <span>Past Evaluations</span>
+            </li>
+            <li class="menu-item">
+                 <span>⭐ </span>
+                <span>Example Criteria</span>
+            </li>
+            <li class="menu-item">
+                <span>❓ </span> 
+                <span>FAQ</span>
+            </li>
+            <li class="menu-item">
+                <span>📖 </span>
+                <span>User Guide</span>
+            </li>
+            <li class="menu-item">
+                 <span>🎧 </span>
+                <span>Contact/Support</span>
+            </li>
+            <li class="menu-item">
+                   <span>⚙️ </span>
+                <span>Settings</span>
+            </li>
+        </ul>
+    </div>
+
+    <div class="main-content">
+        <div class="container">
+            <header>
+                <h1>CV Evulator</h1>
+                <p class="subtitle">Upload your CV and enter criteria to evaluate its suitability</p>
+            </header>
+
+            <div class="section">
+                <h2 class="section-title">Upload CV</h2>
+                <div class="upload-area" id="uploadArea">
+                    <input type="file" id="cv-files" class="file-input" accept=".pdf" multiple>
+                    <label for="cv-files" class="btn">Choose PDF Files</label>
+                    <p>or drag and drop files here</p>
+                    <p id="fileHint">No files selected</p>
+                </div>
+            </div>
+
+           <div class="section">
+                <h2 class="section-title">Evaluation Criteria</h2>
+                <p>Enter the criteria you want to evaluate in the CV:</p>
+                <div>
+                    <label>
+                        <input type="checkbox" id="enableWeights" onchange="toggleWeights()"> Enable criteria weighting
+                        <span id="weightSummary" class="weight-summary" style="display: none;">Total weight: <span id="totalWeight">0</span>/100</span>
+                    </label>
+                    <div id="weightError" class="weight-error" style="display: none;"></div>
+                </div>
+                <div class="criteria-container" id="criteriaContainer"></div>
+                <button class="add-criterion-btn" onclick="addCriterion()">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 5v14M5 12h14"></path>
+                    </svg>
+                    Add Criterion
+                </button>
+            </div>
+            <div class="section">
+                <button id="analyzeBtn" class="btn disabled">Evulate Cv's</button>
+            </div>
+
+            <div class="section" id="resultsSection">
+                <h2 class="section-title">Evaluation results</h2>
+                <div id="results"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const uploadArea = document.getElementById('uploadArea');
+        const fileInput = document.getElementById('cv-files');
+        const fileHint = document.getElementById('fileHint');
+        const analyzeBtn = document.getElementById('analyzeBtn');
+
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.style.borderColor = 'var(--primary)';
+        });
+
+        uploadArea.addEventListener('dragleave', () => {
+            uploadArea.style.borderColor = 'var(--border)';
+        });
+
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.style.borderColor = 'var(--border)';
+            fileInput.files = e.dataTransfer.files;
+            updateFileHint();
+        });
+
+        fileInput.addEventListener('change', updateFileHint);
+
+        function updateFileHint() {
+            fileHint.textContent = fileInput.files.length > 0 ? `${fileInput.files.length} file(s) selected` : 'No files selected';
+        }
+
+        function addCriterion(value = '') {
+            const container = document.getElementById('criteriaContainer');
+            const newCriterion = document.createElement('div');
+            newCriterion.className = 'criterion-item';
+            newCriterion.innerHTML = `
+                <input type="text" class="criterion-input" placeholder='Enter a criterion' value="${value}">
+                <button class="remove-criterion" onclick="this.parentElement.remove(); toggleAnalyzeButton();">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M18 6L6 18M6 6l12 12"></path>
+                    </svg>
+                </button>
+            `;
+            container.appendChild(newCriterion);
+            const input = newCriterion.querySelector('input');
+            input.focus();
+            input.addEventListener('keydown', e => {
+                if (e.key === 'Enter') addCriterion();
+            });
+            input.addEventListener('input', toggleAnalyzeButton);
+            toggleAnalyzeButton();
+        }
+
+        function toggleAnalyzeButton() {
+            const criteria = Array.from(document.querySelectorAll('.criterion-input')).filter(i => i.value.trim());
+            if (criteria.length > 0) {
+                analyzeBtn.classList.remove('disabled');
+                analyzeBtn.classList.add('active');
+                analyzeBtn.disabled = false;
+            } else {
+                analyzeBtn.classList.add('disabled');
+                analyzeBtn.classList.remove('active');
+                analyzeBtn.disabled = true;
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            addCriterion();
+            analyzeBtn.addEventListener('click', analyzeCVs);
+        });
+
+        async function analyzeCVs() {
+            const criteria = Array.from(document.querySelectorAll('.criterion-input')).map(input => input.value.trim()).filter(Boolean);
+            const files = fileInput.files;
+            if (!files.length || !criteria.length) {
+                alert("Please select files and add at least one criterion");
+                return;
+            }
+            const formData = new FormData();
+            formData.append('criteria', JSON.stringify(criteria));
+            for (let i = 0; i < files.length; i++) {
+                formData.append('files', files[i]);
+            }
+            document.getElementById('results').innerHTML = '<p>Analyzing with AI... This may take a minute</p>';
+            try {
+                const response = await fetch('/analyze', { method: 'POST', body: formData });
+                const results = await response.json();
+                displayResults(results);
+            } catch (error) {
+                document.getElementById('results').innerHTML = `<div class="result-item"><p>Error: ${error.message}</p></div>`;
+            }
+        }
+
+        function displayResults(results) {
+            let html = '';
+            results.forEach(result => {
+                html += `<div class="result-item"><h3>${result.filename}</h3><div class="ai-analysis">${result.analysis || 'No analysis available'}</div></div>`;
+            });
+            document.getElementById('results').innerHTML = html;
+        }
+        function addCriterion(value = '', weight = 1) {
+            const container = document.getElementById('criteriaContainer');
+            const enableWeights = document.getElementById('enableWeights').checked;
+            
+            const newCriterion = document.createElement('div');
+            newCriterion.className = 'criterion-item';
+            
+            if (enableWeights) {
+                newCriterion.innerHTML = `
+                    <div style="display: flex; align-items: center; width: 100%;">
+                        <input type="text" class="criterion-input" placeholder='Enter a criterion' value="${value}" style="flex: 1;">
+                        <span class="weight-label">Weight:</span>
+                        <input type="number" class="criterion-weight" value="${weight}" min="1" max="10">
+                        <button class="remove-criterion" onclick="this.parentElement.parentElement.remove(); toggleAnalyzeButton();">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M18 6L6 18M6 6l12 12"></path>
+                            </svg>
+                        </button>
+                    </div>
+                `;
+            } else {
+                newCriterion.innerHTML = `
+                    <div style="display: flex; align-items: center; width: 100%;">
+                        <input type="text" class="criterion-input" placeholder='Enter a criterion' value="${value}" style="flex: 1;">
+                        <button class="remove-criterion" onclick="this.parentElement.remove(); toggleAnalyzeButton();">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M18 6L6 18M6 6l12 12"></path>
+                            </svg>
+                        </button>
+                    </div>
+                `;
+            }
+            
+            container.appendChild(newCriterion);
+            const input = newCriterion.querySelector('.criterion-input');
+            input.focus();
+            
+            input.addEventListener('keydown', e => {
+                if (e.key === 'Enter') addCriterion();
+            });
+            
+            input.addEventListener('input', toggleAnalyzeButton);
+            toggleAnalyzeButton();
+        }
+
+        function toggleAnalyzeButton() {
+            const criteria = getCriteria();
+            if (criteria.length > 0) {
+                analyzeBtn.classList.remove('disabled');
+                analyzeBtn.classList.add('active');
+                analyzeBtn.disabled = false;
+            } else {
+                analyzeBtn.classList.add('disabled');
+                analyzeBtn.classList.remove('active');
+                analyzeBtn.disabled = true;
+            }
+        }
+
+        function getCriteria() {
+            const criteria = [];
+            const items = document.querySelectorAll('.criterion-item');
+            
+            items.forEach(item => {
+                const textInput = item.querySelector('.criterion-input');
+                const weightInput = item.querySelector('.criterion-weight');
+                
+                if (textInput && textInput.value.trim()) {
+                    if (weightInput) {
+                        criteria.push({
+                            text: textInput.value.trim(),
+                            weight: parseInt(weightInput.value) || 1
+                        });
+                    } else {
+                        criteria.push({
+                            text: textInput.value.trim(),
+                            weight: 1
+                        });
+                    }
+                }
+            });
+            
+            return criteria;
+        }
+
+        async function analyzeCVs() {
+            const criteria = getCriteria();
+            const files = fileInput.files;
+            
+            if (!files.length || !criteria.length) {
+                alert("Please select files and add at least one criterion");
+                return;
+            }
+            
+            const formData = new FormData();
+            formData.append('criteria', JSON.stringify(criteria));
+            
+            for (let i = 0; i < files.length; i++) {
+                formData.append('files', files[i]);
+            }
+            
+            document.getElementById('results').innerHTML = '<p>Analyzing with AI... This may take a minute</p>';
+            
+            try {
+                const response = await fetch('/analyze', { method: 'POST', body: formData });
+                const results = await response.json();
+                displayResults(results);
+            } catch (error) {
+                document.getElementById('results').innerHTML = `<div class="result-item"><p>Error: ${error.message}</p></div>`;
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            addCriterion();
+            analyzeBtn.addEventListener('click', analyzeCVs);
+            
+            // Ağırlık toggle işlevselliği
+            document.getElementById('enableWeights').addEventListener('change', function() {
+                const items = document.querySelectorAll('.criterion-item');
+                if (items.length > 0) {
+                    alert("Weight changes will only apply to new criteria. Please add new criteria to see the effect.");
+                }
+            });
+        });
+        function toggleWeights() {
+            const enableWeights = document.getElementById('enableWeights').checked;
+            document.getElementById('weightSummary').style.display = enableWeights ? 'inline' : 'none';
+            document.getElementById('weightError').style.display = 'none';
+            
+            // Tüm kriterleri yeniden oluştur
+            const criteria = getCriteria();
+            const container = document.getElementById('criteriaContainer');
+            container.innerHTML = '';
+            
+            criteria.forEach(criterion => {
+                addCriterion(criterion.text, criterion.weight, false);
+            });
+            
+            if (enableWeights) {
+                updateWeightSummary();
+            }
+        }
+
+        function addCriterion(value = '', weight = 1, focus = true) {
+            const container = document.getElementById('criteriaContainer');
+            const enableWeights = document.getElementById('enableWeights').checked;
+            
+            const newCriterion = document.createElement('div');
+            newCriterion.className = 'criterion-item';
+            
+            newCriterion.innerHTML = `
+                <div class="criteria-row">
+                    <div class="criteria-input-container">
+                        <input type="text" class="criterion-input" placeholder='Enter a criterion' value="${value}">
+                        <button class="remove-criterion" onclick="removeCriterion(this)">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M18 6L6 18M6 6l12 12"></path>
+                            </svg>
+                        </button>
+                    </div>
+                    ${enableWeights ? `
+                    <div class="weight-controls">
+                        <span class="weight-label">Weight:</span>
+                        <input type="number" class="criterion-weight" value="${weight}" min="1" max="100" onchange="updateWeights()">
+                    </div>
+                    ` : ''}
+                </div>
+            `;
+            
+            container.appendChild(newCriterion);
+            const input = newCriterion.querySelector('.criterion-input');
+            if (focus) {
+                input.focus();
+            }
+            
+            input.addEventListener('keydown', e => {
+                if (e.key === 'Enter') addCriterion();
+            });
+            
+            input.addEventListener('input', toggleAnalyzeButton);
+            
+            if (enableWeights) {
+                updateWeights();
+            } else {
+                toggleAnalyzeButton();
+            }
+        }
+
+        function removeCriterion(button) {
+            button.closest('.criterion-item').remove();
+            if (document.getElementById('enableWeights').checked) {
+                updateWeights();
+            } else {
+                toggleAnalyzeButton();
+            }
+        }
+
+        function updateWeights() {
+            const weights = Array.from(document.querySelectorAll('.criterion-weight')).map(input => parseInt(input.value) || 0);
+            const totalWeight = weights.reduce((sum, weight) => sum + weight, 0);
+            
+            document.getElementById('totalWeight').textContent = totalWeight;
+            
+            const weightError = document.getElementById('weightError');
+            if (totalWeight > 100) {
+                weightError.textContent = `Total weight cannot exceed 100 (current: ${totalWeight})`;
+                weightError.style.display = 'block';
+                document.getElementById('analyzeBtn').classList.add('disabled');
+                document.getElementById('analyzeBtn').disabled = true;
+            } else {
+                weightError.style.display = 'none';
+                toggleAnalyzeButton();
+            }
+        }
+
+        function updateWeightSummary() {
+            const weights = Array.from(document.querySelectorAll('.criterion-weight')).map(input => parseInt(input.value) || 0);
+            const totalWeight = weights.reduce((sum, weight) => sum + weight, 0);
+            document.getElementById('totalWeight').textContent = totalWeight;
+        }
+
+        function getCriteria() {
+            const criteria = [];
+            const items = document.querySelectorAll('.criterion-item');
+            const enableWeights = document.getElementById('enableWeights').checked;
+            
+            items.forEach(item => {
+                const textInput = item.querySelector('.criterion-input');
+                const weightInput = item.querySelector('.criterion-weight');
+                
+                if (textInput && textInput.value.trim()) {
+                    criteria.push({
+                        text: textInput.value.trim(),
+                        weight: enableWeights ? parseInt(weightInput?.value) || 1 : 1
+                    });
+                }
+            });
+            
+            return criteria;
+        }
+
+        function toggleAnalyzeButton() {
+            const criteria = getCriteria();
+            const enableWeights = document.getElementById('enableWeights').checked;
+            let isValid = criteria.length > 0;
+            
+            if (enableWeights) {
+                const totalWeight = criteria.reduce((sum, c) => sum + (c.weight || 1), 0);
+                isValid = isValid && totalWeight === 100;
+            }
+            
+            if (isValid) {
+                analyzeBtn.classList.remove('disabled');
+                analyzeBtn.classList.add('active');
+                analyzeBtn.disabled = false;
+            } else {
+                analyzeBtn.classList.add('disabled');
+                analyzeBtn.classList.remove('active');
+                analyzeBtn.disabled = true;
+            }
+        }
+
+        async function analyzeCVs() {
+            const criteria = getCriteria();
+            const files = fileInput.files;
+            
+            if (!files.length || !criteria.length) {
+                alert("Please select files and add at least one criterion");
+                return;
+            }
+            
+            const enableWeights = document.getElementById('enableWeights').checked;
+            if (enableWeights) {
+                const totalWeight = criteria.reduce((sum, c) => sum + (c.weight || 1), 0);
+                if (totalWeight !== 100) {
+                    alert("Total weight must be exactly 100");
+                    return;
+                }
+            }
+            
+            const formData = new FormData();
+            formData.append('criteria', JSON.stringify(criteria));
+            
+            for (let i = 0; i < files.length; i++) {
+                formData.append('files', files[i]);
+            }
+            
+            document.getElementById('results').innerHTML = '<p>Analyzing with AI... This may take a minute</p>';
+            
+            try {
+                const response = await fetch('/analyze', { method: 'POST', body: formData });
+                const results = await response.json();
+                displayResults(results);
+            } catch (error) {
+                document.getElementById('results').innerHTML = `<div class="result-item"><p>Error: ${error.message}</p></div>`;
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            addCriterion();
+            analyzeBtn.addEventListener('click', analyzeCVs);
+        });
+        function displayResults(results) {
+        let html = '';
+        results.forEach(result => {
+            if (result.error) {
+                html += `<div class="result-item"><h3>${result.filename}</h3><p>${result.error}</p></div>`;
+            } else {
+                // Sadece temiz çıktıyı göster
+                const analysisLines = result.analysis.split('\n');
+                html += `
+                    <div class="result-item">
+                        <h3>${analysisLines[0]}</h3>
+                        <div class="ai-analysis">${analysisLines[1]}</div>
+                    </div>
+                `;
+            }
+        });
+        document.getElementById('results').innerHTML = html;
+    }
+    </script>
+</body>
+</html>
+    </script>
+</body>
+</html>
