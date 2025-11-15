@@ -763,7 +763,7 @@ Contributions are welcome! Please follow these guidelines:
 
 ## 📧 Contact
 
-**Developer**: Erdem Maliş
+**Developer**: Mehmet Ali Sevdinoglu
 
 - GitHub: [@malisevdinoglu](https://github.com/malisevdinoglu)
 - LinkedIn: [Mehmet Ali Sevdinoglu](https://linkedin.com/in/erdem-malis)
